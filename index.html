@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="faceX">
+<head>
+  <meta charset="UTF-8">
+  <title>FaceX</title>
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+</head>
+<body>
+
+  <div ng-controller="snapPhoto as snap_c">
+    <video ng-show="snap_c.showVideo" id="video" autoplay></video>
+    <canvas ng-show="snap_c.showCanvas"></canvas>
+
+    <button ng-show="snap_c.showVideo" ng-click="snap_c.snapPhoto()">Snap</button>
+    <button ng-show="snap_c.showCanvas" ng-click="snap_c.submit()">Submit Photo</button>
+    <button ng-show="snap_c.showCanvas" ng-click="snap_c.retake()">Retake Photo</button>
+  </div>
+
+  <div>
+
+  </div>
+
+  <script src="http://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+</body>
+</html>
