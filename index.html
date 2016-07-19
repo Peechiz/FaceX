@@ -5,23 +5,45 @@
   <title>FaceX</title>
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+  <script type="text/javascript" src="app.js"></script>
 </head>
 <body>
 
-  <div ng-controller="snapPhoto as snap_c">
+  <div ng-init="nav=true" ng-show="nav">
+    <button ng-init="useUpload=false" ng-click="useUpload=true; nav=false">upload</button>
+    <button ng-init="useURL=false" ng-click="useURL=true; nav=false">URL</button>
+    <button ng-init="useWebCam=false" ng-click="useWebCam=true; nav=false">WebCam</button>
+  </div>
+
+  <div ng-if="useUpload" ng-controller="useUpload as p">
+    <form ng-submit="p.submit()">
+      <label>Choose Photo: </label>
+      <input type="file" onChange="previewFile()" id="getImage">
+      <input type="submit">
+      <img id="preview">
+    </form>
+  </div>
+
+  <div ng-if="useURL" ng-controller="useURL as u">
+    <form ng-submit="u.submit()">
+      <label>Image URL: </label>
+      <input type="url" name="url" ng-model="u.url">
+      <input type="submit">
+    </form>
+    <img ng-src="{{u.test}}">
+  </div>
+
+  <div ng-if="useWebCam" ng-controller="snapPhoto as snap_c">
     <video ng-show="snap_c.showVideo" id="video" autoplay></video>
     <canvas ng-show="snap_c.showCanvas"></canvas>
 
     <button ng-show="snap_c.showVideo" ng-click="snap_c.snapPhoto()">Snap</button>
     <button ng-show="snap_c.showCanvas" ng-click="snap_c.submit()">Submit Photo</button>
     <button ng-show="snap_c.showCanvas" ng-click="snap_c.retake()">Retake Photo</button>
+    <img ng-src="{{snap_c.test}}">
   </div>
 
-  <div>
-
-  </div>
 
   <script src="http://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script type="text/javascript" src="app.js"></script>
 </body>
 </html>

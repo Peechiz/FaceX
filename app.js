@@ -1,16 +1,63 @@
 'use strict';
 
-var app = angular.module('faceX',[]);
+var app = angular.module('faceX', []);
 
 app.controller('snapPhoto', snapPhoto)
+app.controller('useURL', useURL)
+app.controller('useUpload', useUpload)
 
-function snapPhoto() {
+var loadedPhoto;
+
+function useUpload($http) {
+  var p = this;
+
+  p.submit = function() {
+    $http({
+      method: 'POST',
+      url: 'http://54.209.143.73:5000/v1.0.0/predict',
+      params: {
+        image_base64: loadedPhoto,
+        annotate_image: true,
+        crop_image: true
+      }
+    }).then(function success(data) {
+      console.log(data);
+    }, function fail(data){
+      console.log('error: ', data);
+    })
+  }
+
+}
+
+function useURL($http) {
+  var u = this;
+
+  u.submit = function() {
+    console.log(u.url)
+    $http({
+      method: 'POST',
+      url: 'http://54.209.143.73:5000/v1.0.0/predict',
+      params: {
+        image_url: u.url,
+        annotate_image: true,
+        crop_image: true
+      }
+    }).then(function success(data) {
+      console.log(data);
+      u.test = data.data.annotated_image;
+    }, function fail(data) {
+      console.log('error: ', data);
+    })
+  }
+}
+
+function snapPhoto($http) {
   var snap_c = this;
 
   snap_c.showVideo = true;
   snap_c.showCanvas = false;
 
-  snap_c.snapPhoto = function(){
+  snap_c.snapPhoto = function() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').
@@ -19,14 +66,30 @@ function snapPhoto() {
     snap_c.showVideo = false;
     snap_c.showCanvas = true;
 
-    snap_c.snapped = canvas.toDataURL('image/jpeg;base64;',0.1)
+    snap_c.snapped = canvas.toDataURL('image/jpeg;base64;', 0.1)
   }
 
-  snap_c.submit = function(){
+  snap_c.submit = function() {
     console.log('submit photo');
+    // play waiting animation by setting some varianle WAITING to true
+    $http({
+      method: 'POST',
+      url: 'http://54.209.143.73:5000/v1.0.0/predict',
+      params: {
+        image_base64: snap_c.snapped,
+        annotate_image: true,
+        crop_image: true
+      }
+    }).then(function success(data) {
+      console.log(data);
+      snap_c.test = data.data.annotated_image;
+    }, function fail(data) {
+      // set WAITING to false
+      console.log('error: ', data);
+    })
   }
 
-  snap_c.retake = function(){
+  snap_c.retake = function() {
     console.log('retaking photo');
   }
 
@@ -51,4 +114,19 @@ function snapPhoto() {
 
   navigator.mediaDevices.getUserMedia(constraints).
   then(handleSuccess).catch(handleError);
+}
+
+function previewFile() {
+  var preview = document.getElementById('preview')
+  var file    = document.getElementById('getImage').files[0];
+  var reader  = new FileReader();
+
+  reader.addEventListener("load", function () {
+    preview.src = reader.result;
+    loadedPhoto = reader.result;
+  }, false);
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
 }
