@@ -5,8 +5,48 @@ var app = angular.module('faceX', []);
 app.controller('snapPhoto', snapPhoto)
 app.controller('useURL', useURL)
 app.controller('useUpload', useUpload)
+app.controller('results', results)
 
 var loadedPhoto;
+
+angular.
+  module('faceX').
+  filter('emoji', function() {
+    return function(input) {
+
+      var faces = {
+        neutral: 'img/emoji/static/neutral.svg',
+        angry: 'img/emoji/static/Angry_flat.png',
+        sad: 'img/emoji/static/Cry_flat.png',
+        happy: 'img/emoji/static/Lol_flat.png',
+        surprise: 'img/emoji/static/Wow_flat.png',
+        fear: 'img/emoji/static/fear.svg'
+      }
+      return faces[input]
+    };
+  });
+
+function results($rootScope){
+  var res = this;
+  var rt = $rootScope;
+
+  res.feedback = false;
+
+  res.submitFeedback = function(face){
+    console.log('submitting feedback');
+    console.log(rt.results);
+    console.log(face);
+  }
+
+  res.confirm = function(){
+    res.feedback = false;
+  }
+
+  res.getFeedback = function(){
+    res.feedback = true;
+  }
+
+}
 
 function useUpload($http) {
   var p = this;
@@ -29,8 +69,9 @@ function useUpload($http) {
 
 }
 
-function useURL($http) {
+function useURL($http,$rootScope) {
   var u = this;
+  var rt = $rootScope;
 
   u.submit = function() {
     console.log(u.url)
@@ -45,6 +86,11 @@ function useURL($http) {
     }).then(function success(data) {
       console.log(data);
       u.test = data.data.annotated_image;
+      rt.useURL = false;
+      rt.results_received = true;
+      rt.results = data.data
+      rt.original = u.url
+      console.log(rt.original);
     }, function fail(data) {
       console.log('error: ', data);
     })
@@ -56,6 +102,16 @@ function snapPhoto($http) {
 
   snap_c.showVideo = true;
   snap_c.showCanvas = false;
+
+  var video = document.querySelector('video');
+  var canvas = window.canvas = document.querySelector('canvas');
+  canvas.width = 480;
+  canvas.height = 360;
+
+  var constraints = {
+    audio: false,
+    video: true
+  };
 
   snap_c.snapPhoto = function() {
     canvas.width = video.videoWidth;
@@ -93,15 +149,7 @@ function snapPhoto($http) {
     console.log('retaking photo');
   }
 
-  var video = document.querySelector('video');
-  var canvas = window.canvas = document.querySelector('canvas');
-  canvas.width = 480;
-  canvas.height = 360;
 
-  var constraints = {
-    audio: false,
-    video: true
-  };
 
   function handleSuccess(stream) {
     window.stream = stream; // make stream available to browser console
