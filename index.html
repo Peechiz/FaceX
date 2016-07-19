@@ -1,49 +1,139 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="faceX">
+
 <head>
   <meta charset="UTF-8">
   <title>FaceX</title>
 
+  <link rel="stylesheet" href="css/bootstrap.css">
+
+  <link rel="stylesheet" href="css/site.css">
+
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+
   <script type="text/javascript" src="app.js"></script>
 </head>
+
 <body>
 
-  <div ng-init="nav=true" ng-show="nav">
-    <button ng-init="useUpload=false" ng-click="useUpload=true; nav=false">upload</button>
-    <button ng-init="useURL=false" ng-click="useURL=true; nav=false">URL</button>
-    <button ng-init="useWebCam=false" ng-click="useWebCam=true; nav=false">WebCam</button>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li class="navbar-brand">MemeMoji</li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="div" ng-show="nav">
+    <h1 class="logo text-center">MemeMoji</h1>
+    <img src="img/brain.svg" class="logo-big img-responsive center-block">
+  </div>
+
+  <div ng-init="nav=true" ng-show="nav" class="navs">
+    <div class="bc">
+      <div ng-init="useURL=false" ng-click="useURL=true; nav=false">
+        <img class="navbutton" src="img/url_button.svg">
+        <p>URL</p>
+      </div>
+      <div ng-init="useWebCam=false" ng-click="useWebCam=true; nav=false">
+        <img class="navbutton" src="img/webcam_button.svg">
+        <p>WEBCAM</p>
+      </div>
+      <div ng-init="useUpload=false" ng-click="useUpload=true; nav=false">
+        <img class="navbutton" src="img/upload_button.svg">
+        <p>UPLOAD</p>
+      </div>
+    </div>
   </div>
 
   <div ng-if="useUpload" ng-controller="useUpload as p">
-    <form ng-submit="p.submit()">
-      <label>Choose Photo: </label>
-      <input type="file" onChange="previewFile()" id="getImage">
-      <input type="submit">
-      <img id="preview">
-    </form>
+    <div class="container">
+      <form ng-submit="p.submit()">
+        <div class="form-group">
+          <label>Choose Photo: </label>
+          <input class="form-control" type="file" onChange="previewFile()" id="getImage">
+        </div>
+        <input class="btn btn-default" type="submit">
+        <img id="preview">
+      </form>
+    </div>
   </div>
 
   <div ng-if="useURL" ng-controller="useURL as u">
-    <form ng-submit="u.submit()">
-      <label>Image URL: </label>
-      <input type="url" name="url" ng-model="u.url">
-      <input type="submit">
-    </form>
-    <img ng-src="{{u.test}}">
+    <div class="container">
+      <div class="col-md-4 col-md-offset-4">
+        <form ng-submit="u.submit()">
+          <div class="form-group">
+            <label>Image URL: </label>
+            <input class="form-control" type="url" name="url" ng-model="u.url">
+          </div>
+          <input class="btn btn-default" type="submit">
+        </form>
+      </div>
+      <img ng-src="{{u.test}}">
+    </div>
   </div>
 
   <div ng-if="useWebCam" ng-controller="snapPhoto as snap_c">
-    <video ng-show="snap_c.showVideo" id="video" autoplay></video>
-    <canvas ng-show="snap_c.showCanvas"></canvas>
+    <div class="container">
+      <video ng-show="snap_c.showVideo" id="video" class="center-block" autoplay></video>
+      <canvas ng-show="snap_c.showCanvas"></canvas>
 
-    <button ng-show="snap_c.showVideo" ng-click="snap_c.snapPhoto()">Snap</button>
-    <button ng-show="snap_c.showCanvas" ng-click="snap_c.submit()">Submit Photo</button>
-    <button ng-show="snap_c.showCanvas" ng-click="snap_c.retake()">Retake Photo</button>
-    <img ng-src="{{snap_c.test}}">
+      <button ng-show="snap_c.showVideo" ng-click="snap_c.snapPhoto()">Snap</button>
+      <button ng-show="snap_c.showCanvas" ng-click="snap_c.submit()">Submit Photo</button>
+      <button ng-show="snap_c.showCanvas" ng-click="snap_c.retake()">Retake Photo</button>
+      <img ng-src="{{snap_c.test}}">
+    </div>
   </div>
 
+  <div ng-init="results_received=false"
+    ng-if="results_received"
+    ng-controller="results as res">
+    <div class="container">
+      <img class="center-block" ng-src="{{original}}" id="og">
+
+      <div ng-repeat="face in results.faces">
+        <div class="well display" >
+          <div>
+            <img ng-src="{{face.thumbnail}}">
+          </div>
+          <div ng-repeat="result in face.prediction">
+            <p><img class="emoji" ng-src="{{result.emotion | emoji }}" alt=""></p>
+            <p>{{result.percent}}</p>
+          </div>
+          <div>
+            <p>Looks correct?</p>
+            <p><a ng-click="res.confirm()">YES</a>  <a ng-click="res.getFeedback()">NO</a></p>
+          </div>
+        </div>
+        <div class="well clearfix" ng-if="res.feedback">
+          <div class="col-md-4">
+            <img ng-src="{{face.thumbnail}}">
+          </div>
+          <form class="col-md-4"
+            ng-submit="res.submitFeedback(face)">
+            <div class="form-group">
+              <label>Please choose the most correct emotion: </label>
+              <select class="form-control" required>
+                <option></option>
+                <option value="">Angry 😡</option>
+                <option value="">Fear 😨</option>
+                <option value="">Happy 😀</option>
+                <option value="">Sad 😢</option>
+                <option value="">Suprise 😮</option>
+                <option value="">Neutral 😐</option>
+              </select>
+            </div>
+            <input class="btn btn-default" type="submit">
+          </form>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
 
   <script src="http://webrtc.github.io/adapter/adapter-latest.js"></script>
 </body>
+
 </html>
