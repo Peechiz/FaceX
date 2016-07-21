@@ -1,8 +1,8 @@
 'use strict';
 
-var app = angular.module('faceX', []);
+var app = angular.module('faceX', ['ngMessages']);
 
-app.controller('snapPhoto', snapPhoto)
+app.controller('useWebCam', useWebCam)
 app.controller('useURL', useURL)
 app.controller('useUpload', useUpload)
 app.controller('results', results)
@@ -26,35 +26,85 @@ angular.
     };
   });
 
+angular.
+  module('faceX').
+  filter('percent', function() {
+    return function(input) {
+      input *= 100;
+      var pct = input.toFixed(1);
+      if (pct.charAt(pct.length-1) === '0'){
+        pct = pct.slice(0,pct.length-2)
+      }
+      return pct;
+    };
+  });
+
 function results($rootScope){
   var res = this;
   var rt = $rootScope;
 
-  res.feedback = false;
+  res.feedback = {};
+  res.emote = {};
+  res.submitted = {};
+  res.nofaces = rt.results.faces.length === 0;
 
   res.submitFeedback = function(face){
     console.log('submitting feedback');
-    console.log(rt.results);
-    console.log(face);
+    console.log(rt.results.id);
+    console.log(face.index);
+    console.log(res.emote[face.index]);
+    res.feedback[face.index]=false;
+    res.submitted[face.index]=true;
   }
 
-  res.confirm = function(){
-    res.feedback = false;
+  res.confirm = function(face){
+    res.feedback[face.index] = false;
+    res.submitted[face.index] = true;
   }
 
-  res.getFeedback = function(){
-    res.feedback = true;
+  res.getFeedback = function(face){
+    res.feedback[face.index] = true;
+  }
+
+  res.isBiggest = function(face_index, result){
+    var arr = rt.results.faces[face_index].prediction;
+
+    // console.log('current face:',face_index);
+    // console.log('current emoji result:',result);
+
+    function getMax(arr){
+      return arr.reduce(function(out,item){
+        // console.log('item:',item);
+        if (item.percent > out){
+          return item.percent
+        }
+        else {
+          return out
+        }
+      },0)
+    }
+
+    var biggest = getMax(arr);
+
+    if (result.percent === biggest){
+      return true;
+    }
+    else {
+      return false;
+    }
+
   }
 
 }
 
-function useUpload($http) {
+function useUpload($http,$rootScope) {
   var p = this;
+  var rt = $rootScope;
 
   p.submit = function() {
     $http({
       method: 'POST',
-      url: 'http://54.209.143.73:5000/v1.0.0/predict',
+      url: 'http://54.164.65.15:5000/v1.0.0/predict',
       params: {
         image_base64: loadedPhoto,
         annotate_image: true,
@@ -62,6 +112,10 @@ function useUpload($http) {
       }
     }).then(function success(data) {
       console.log(data);
+      rt.useUpload = false;
+      rt.results_received = true;
+      rt.results = data.data
+      rt.original = loadedPhoto;
     }, function fail(data){
       console.log('error: ', data);
     })
@@ -77,7 +131,7 @@ function useURL($http,$rootScope) {
     console.log(u.url)
     $http({
       method: 'POST',
-      url: 'http://54.209.143.73:5000/v1.0.0/predict',
+      url: 'http://54.164.65.15:5000/v1.0.0/predict',
       params: {
         image_url: u.url,
         annotate_image: true,
@@ -85,7 +139,6 @@ function useURL($http,$rootScope) {
       }
     }).then(function success(data) {
       console.log(data);
-      u.test = data.data.annotated_image;
       rt.useURL = false;
       rt.results_received = true;
       rt.results = data.data
@@ -97,11 +150,12 @@ function useURL($http,$rootScope) {
   }
 }
 
-function snapPhoto($http) {
-  var snap_c = this;
+function useWebCam($http, $rootScope) {
+  var w = this;
+  var rt = $rootScope;
 
-  snap_c.showVideo = true;
-  snap_c.showCanvas = false;
+  w.showVideo = true;
+  w.showCanvas = false;
 
   var video = document.querySelector('video');
   var canvas = window.canvas = document.querySelector('canvas');
@@ -113,40 +167,49 @@ function snapPhoto($http) {
     video: true
   };
 
-  snap_c.snapPhoto = function() {
+  w.snapPhoto = function() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').
     drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    snap_c.showVideo = false;
-    snap_c.showCanvas = true;
+    w.showVideo = false;
+    w.showCanvas = true;
 
-    snap_c.snapped = canvas.toDataURL('image/jpeg;base64;', 0.1)
+    w.snapped = canvas.toDataURL('image/jpeg;base64;', 0.1)
   }
 
-  snap_c.submit = function() {
+  w.submit = function() {
     console.log('submit photo');
+    window.stream.getVideoTracks()[0].stop();
     // play waiting animation by setting some varianle WAITING to true
+    w.waiting = true;
+    w.showCanvas = false;
     $http({
       method: 'POST',
-      url: 'http://54.209.143.73:5000/v1.0.0/predict',
+      url: 'http://54.164.65.15:5000/v1.0.0/predict',
       params: {
-        image_base64: snap_c.snapped,
+        image_base64: w.snapped,
         annotate_image: true,
         crop_image: true
       }
     }).then(function success(data) {
       console.log(data);
-      snap_c.test = data.data.annotated_image;
+      w.waiting = false;
+      rt.useWebCam = false;
+      rt.results_received = true;
+      rt.results = data.data
+      rt.original = w.snapped
     }, function fail(data) {
       // set WAITING to false
       console.log('error: ', data);
     })
   }
 
-  snap_c.retake = function() {
+  w.retake = function() {
     console.log('retaking photo');
+    w.showVideo = true;
+    w.showCanvas = false;
   }
 
 
