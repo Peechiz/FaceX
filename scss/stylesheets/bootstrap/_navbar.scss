@@ -10,7 +10,7 @@
 
 .navbar {
   position: relative;
-  min-height: $navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
+  min-height: $navbar-height;
   margin-bottom: $navbar-margin-bottom;
   border: 1px solid transparent;
 
@@ -161,7 +161,8 @@
 // Brand/project name
 
 .navbar-brand {
-  float: left;
+  float: none;
+  text-align: center;
   padding: $navbar-padding-vertical $navbar-padding-horizontal;
   font-size: $font-size-large;
   line-height: $line-height-computed;
@@ -264,11 +265,11 @@
 
   // Uncollapse the nav
   @media (min-width: $grid-float-breakpoint) {
-    float: left;
+    float: none;
     margin: 0;
 
     > li {
-      float: left;
+      float: none;
       > a {
         padding-top:    $navbar-padding-vertical;
         padding-bottom: $navbar-padding-vertical;

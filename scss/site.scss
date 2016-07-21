@@ -5,8 +5,8 @@ $blue: rgba(83, 179, 203, 1);
 $white: #F2F2F2;
 
 .logo-big {
-  height: 25%;
-  width: 25%;
+  max-height: 60%;
+  margin: 0 50px 0 50px;
 }
 
 @font-face {
@@ -17,13 +17,31 @@ $white: #F2F2F2;
 .logo {
   color: $yellow;
   font-family: 'crazy';
+}
+
+.logonav {
+  color: $yellow;
+  font-family: 'crazy';
+  text-align: center;
+  padding-top: 9px;
+  margin: 0 auto;
+}
+
+.big {
+  padding-top: 20px;
   font-size: 7em;
 }
 
-body {
-  background-color: $white;
-  padding-top: 70px;
+.med {
+  font-size: 2em;
+  width: 50%;
 }
+
+body {
+  background-color: $red;
+  border-top: 20px solid $white;
+}
+
 
 .navbutton {
   width: 150px;
@@ -35,11 +53,17 @@ body {
   &:hover {
     cursor: pointer;
   }
+  @media (max-width: 768px) {
+    width: 90px;
+    height: 90px;
+    margin: -20px 1rem 0 1rem;
+  }
 }
 
 .bc {
   display: flex;
   justify-content: center;
+  background-color: $red;
   p {
     text-align: center;
     color: $white;
@@ -54,12 +78,102 @@ body {
   bottom: 0;
 }
 
-.emoji {
-  width: 30px;
+.vid {
+  padding-top: 70px;
+  margin-bottom: 60px;
+}
+
+.supersmall {
   height: 30px;
+}
+
+@mixin shadow() {
+  box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
+}
+
+.emoji {
+  width: 25px;
+  height: 25px;
+}
+
+.bigger {
+  width: 50px;
+  height: 50px;
 }
 
 .display {
   display: flex;
   justify-content: space-around;
+  align-items: center;
+}
+
+.preview {
+  height: 50px;
+}
+
+.full-height {
+  min-height: 80%;
+  min-height: 80vh;
+}
+
+.tn {
+  height: 75px;
+  @include shadow();
+}
+
+.og {
+  margin-top: 90px;
+  margin-bottom: 25px;
+  margin-right: 20px;
+  margin-left: 20px;
+  max-height: 45vh;
+  @include shadow();
+}
+
+.correct {
+  a {
+    font-size: 2em;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.blue {
+  color: $blue;
+  padding-top: 90px;
+}
+
+main {
+  height: 75vh;
+  background-color: $white;
+}
+
+.result {
+  min-height: 50vh;
+  background-color: $white;
+  clear: both;
+  border-bottom: 30px solid $red;
+}
+
+footer {
+  padding-top: 100px;
+  margin-bottom: 100px;
+  background-color: $red;
+  a {
+    color: $white;
+    &:hover{
+      color: $white;
+    }
+  }
+  .avatar {
+    height: 150px;
+  }
+  .profile {
+    border-radius: 50%;
+    border: 5px solid $white;
+  }
+  .link {
+    margin-bottom: 10px;
+  }
 }

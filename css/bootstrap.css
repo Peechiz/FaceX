@@ -3782,7 +3782,8 @@ tbody.collapse.in {
   border-width: 1px 0 0; }
 
 .navbar-brand {
-  float: left;
+  float: none;
+  text-align: center;
   padding: 15px 15px;
   font-size: 18px;
   line-height: 20px;
@@ -3843,10 +3844,10 @@ tbody.collapse.in {
           background-image: none; } }
   @media (min-width: 768px) {
     .navbar-nav {
-      float: left;
+      float: none;
       margin: 0; }
       .navbar-nav > li {
-        float: left; }
+        float: none; }
         .navbar-nav > li > a {
           padding-top: 15px;
           padding-bottom: 15px; } }
