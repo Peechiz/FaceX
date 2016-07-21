@@ -3,13 +3,14 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>FaceX</title>
+  <title>MemeMoji</title>
 
   <link rel="stylesheet" href="css/bootstrap.css">
 
   <link rel="stylesheet" href="css/site.css">
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.js"></script>
 
   <script type="text/javascript" src="app.js"></script>
 </head>
@@ -18,18 +19,29 @@
 
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
-      <ul class="nav navbar-nav">
-        <li class="navbar-brand">MemeMoji</li>
+      <ul ng-hide="nav" class="nav navbar-nav">
+        <li class="pull-left">
+          <a href="/">
+            <img class="supersmall" src="graphics/little-white-brain.svg">
+          </a>
+        </li>
+        <li class="logonav med">MemeMoji</li>
       </ul>
     </div>
   </nav>
 
   <div class="div" ng-show="nav">
-    <h1 class="logo text-center">MemeMoji</h1>
-    <img src="img/brain.svg" class="logo-big img-responsive center-block">
+    <main>
+      <h1 class="logo big text-center">MemeMoji</h1>
+      <img src="img/brain.svg" class="logo-big img-responsive center-block">
+    </main>
   </div>
 
-  <div ng-init="nav=true" ng-show="nav" class="navs">
+  <!-- ******************* -->
+  <!-- INITIAL NAV BUTTONS -->
+  <!-- ******************* -->
+
+  <div ng-init="nav=true" ng-show="nav">
     <div class="bc">
       <div ng-init="useURL=false" ng-click="useURL=true; nav=false">
         <img class="navbutton" src="img/url_button.svg">
@@ -46,92 +58,210 @@
     </div>
   </div>
 
+  <!-- ********** -->
+  <!-- USE UPLOAD -->
+  <!-- ********** -->
+
   <div ng-if="useUpload" ng-controller="useUpload as p">
-    <div class="container">
-      <form ng-submit="p.submit()">
-        <div class="form-group">
-          <label>Choose Photo: </label>
-          <input class="form-control" type="file" onChange="previewFile()" id="getImage">
+    <main class="display full-height">
+      <div class="container">
+        <div class="col-md-4 col-md-offset-4">
+          <form ng-submit="p.submit()">
+            <div class="form-group">
+              <label>
+                Choose Photo: <img id="preview" class="preview">
+              </label>
+              <input class="form-control" type="file" onChange="previewFile()" id="getImage">
+            </div>
+            <input class="btn btn-default" type="submit">
+          </form>
         </div>
-        <input class="btn btn-default" type="submit">
-        <img id="preview">
-      </form>
-    </div>
+      </div>
+    </main>
   </div>
+
+  <!-- ******* -->
+  <!-- USE URL -->
+  <!-- ******* -->
 
   <div ng-if="useURL" ng-controller="useURL as u">
-    <div class="container">
-      <div class="col-md-4 col-md-offset-4">
-        <form ng-submit="u.submit()">
-          <div class="form-group">
-            <label>Image URL: </label>
-            <input class="form-control" type="url" name="url" ng-model="u.url">
-          </div>
-          <input class="btn btn-default" type="submit">
-        </form>
+    <main>
+      <div class="display full-height">
+            <form class="col-md-4" name="sendURL" ng-submit="u.submit()">
+              <div class="form-group" ng-class="{'has-error': sendURL.url.$invalid && !sendURL.url.$pristine, 'has-success': sendURL.url.$valid}">
+
+                <label class="control-label" for="url">Image URL: </label>
+                <input class="form-control" type="url" id="url" name="url" ng-model="u.url" required>
+
+                <div ng-messages="sendURL.url.$error" ng-show="sendURL.url.$touched">
+
+                  <p class="help-block" ng-message="required">Please enter an image URL</p>
+                  <p class="help-block" ng-message="url">Please enter a valid URL</p>
+
+                </div>
+              </div>
+              <input class="btn" ng-class="{'btn-default': sendURL.url.$pristine, 'btn-danger': !sendURL.url.$valid && !sendURL.url.$pristine, 'btn-success': sendURL.url.$valid}" type="submit">
+            </form>
       </div>
-      <img ng-src="{{u.test}}">
+    </main>
+  </div>
+
+  <!-- ******* -->
+  <!--  WEBCAM -->
+  <!-- ******* -->
+
+  <div ng-if="useWebCam" ng-controller="useWebCam as w">
+    <main>
+      <video ng-show="w.showVideo" id="video" class="center-block vid" autoplay></video>
+      <div ng-show="w.waiting">
+        <h1 class="text-center blue">Loading Results...</h1>
+        <img class="center-block" src="img/gif/brain.gif">
+      </div>
+      <canvas class="center-block vid" ng-show="w.showCanvas"></canvas>
+    </main>
+    <div class="bc">
+      <div ng-show="w.showVideo" ng-click="w.snapPhoto()">
+        <img class="navbutton" src="graphics/webcam_button.svg">
+        <p>Snap Photo</p>
+      </div>
+      <div ng-show="w.showCanvas" ng-click="w.submit()">
+        <img class="navbutton" src="graphics/predict_button.svg" alt="">
+        <p>Predict!</p>
+      </div>
+      <div ng-show="w.showCanvas" ng-click="w.retake()">
+        <img class="navbutton" src="graphics/retake_button.svg">
+        <p>Retake Photo</p>
+      </div>
     </div>
   </div>
 
-  <div ng-if="useWebCam" ng-controller="snapPhoto as snap_c">
-    <div class="container">
-      <video ng-show="snap_c.showVideo" id="video" class="center-block" autoplay></video>
-      <canvas ng-show="snap_c.showCanvas"></canvas>
-
-      <button ng-show="snap_c.showVideo" ng-click="snap_c.snapPhoto()">Snap</button>
-      <button ng-show="snap_c.showCanvas" ng-click="snap_c.submit()">Submit Photo</button>
-      <button ng-show="snap_c.showCanvas" ng-click="snap_c.retake()">Retake Photo</button>
-      <img ng-src="{{snap_c.test}}">
-    </div>
-  </div>
+  <!-- ******* -->
+  <!-- RESULTS -->
+  <!-- ******* -->
 
   <div ng-init="results_received=false"
     ng-if="results_received"
     ng-controller="results as res">
-    <div class="container">
-      <img class="center-block" ng-src="{{original}}" id="og">
 
+    <div class="display result">
+      <img class="og" ng-src="{{original}}" id="og">
+    </div>
+
+    <div class="container">
+      <div ng-if="res.nofaces">
+        <div class="bc">
+          <a href="/">
+            <img class="navbutton" src="graphics/retake_button.svg">
+          </a>
+        </div>
+        <div class="well display">
+          <h1>Whoops! Emoji Brain didn't detect any faces. 😭</h1>
+        </div>
+      </div>
       <div ng-repeat="face in results.faces">
-        <div class="well display" >
+        <div class="well display">
           <div>
-            <img ng-src="{{face.thumbnail}}">
+            <img class="tn" ng-src="{{face.thumbnail}}">
           </div>
           <div ng-repeat="result in face.prediction">
-            <p><img class="emoji" ng-src="{{result.emotion | emoji }}" alt=""></p>
-            <p>{{result.percent}}</p>
+            <p><img class="emoji" ng-class="{'bigger': res.isBiggest(face.index,result)}" ng-src="{{result.emotion | emoji }}" alt=""></p>
+            <p class="text-center">{{result.percent | percent }}%</p>
           </div>
-          <div>
+          <div ng-if="!res.submitted[face.index]">
             <p>Looks correct?</p>
-            <p><a ng-click="res.confirm()">YES</a>  <a ng-click="res.getFeedback()">NO</a></p>
+            <p class="correct text-center"><a ng-click="res.confirm(face)">👍</a> <a ng-click="res.getFeedback(face)">👎</a></p>
+          </div>
+          <div ng-if="res.submitted[face.index]">
+            <p class="text-success">Thanks!</p>
           </div>
         </div>
-        <div class="well clearfix" ng-if="res.feedback">
+
+        <!-- SUBMIT FEEDBACK -->
+        <div class="well clearfix" ng-if="res.feedback[face.index]">
           <div class="col-md-4">
             <img ng-src="{{face.thumbnail}}">
           </div>
-          <form class="col-md-4"
-            ng-submit="res.submitFeedback(face)">
+          <form class="col-md-4" ng-submit="res.submitFeedback(face)">
             <div class="form-group">
               <label>Please choose the most correct emotion: </label>
-              <select class="form-control" required>
+              <select ng-model="res.emote[face.index]" class="form-control" required>
                 <option></option>
-                <option value="">Angry 😡</option>
-                <option value="">Fear 😨</option>
-                <option value="">Happy 😀</option>
-                <option value="">Sad 😢</option>
-                <option value="">Suprise 😮</option>
-                <option value="">Neutral 😐</option>
+                <option value="angry">😡 Angry</option>
+                <option value="fear">😨 Fear</option>
+                <option value="happy">😀 Happy</option>
+                <option value="sad">😢 Sad</option>
+                <option value="surprise">😮 Suprise</option>
+                <option value="neutral">😐 Neutral</option>
               </select>
             </div>
             <input class="btn btn-default" type="submit">
           </form>
         </div>
       </div>
-
-
     </div>
   </div>
+
+  <!-- ******* -->
+  <!--  FOOTER -->
+  <!-- ******* -->
+
+  <footer>
+    <div class="container">
+      <div class="col-md-5">
+        <div class="col-md-6">
+          <img class="avatar" src="graphics/little-white-brain.svg" alt="">
+        </div>
+        <div class="col-md-6">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+            irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-md-offset-1">
+        <div class="row">
+          <div class="col-md-5">
+            <img class="avatar profile" src="https://avatars3.githubusercontent.com/u/16370085?v=3&s=460" alt="">
+          </div>
+          <div class="col-md-7">
+            <row>
+              <div class="col-md-6">
+                <img class="link" src="graphics/linkedin.svg">
+                <a href="https://www.linkedin.com/in/jostinefho">LinkedIn</a>
+              </div>
+              <div class="col-md-6">
+                <img class="link" src="graphics/github.svg">
+                <a href="https://github.com/JostineHo">GitHub</a>
+              </div>
+            </row>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+        </div>
+        <div class="row">
+          <!-- <hr> -->
+          <br>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <img class="avatar profile" src="https://avatars1.githubusercontent.com/u/6421349?v=3&s=460" alt="">
+          </div>
+          <div class="col-md-7">
+            <row>
+              <div class="col-md-6">
+                <img class="link" src="graphics/linkedin.svg">
+                <a href="https://www.linkedin.com/in/chris-impicciche-4b325512">LinkedIn</a>
+              </div>
+              <div class="col-md-6">
+                <img class="link" src="graphics/github.svg">
+                <a href="https://github.com/Peechiz">GitHub</a>
+              </div>
+            </row>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script src="http://webrtc.github.io/adapter/adapter-latest.js"></script>
 </body>
