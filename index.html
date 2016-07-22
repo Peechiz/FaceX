@@ -153,10 +153,19 @@
         <img class="abs" crossorigin="anonymous" ng-src="{{original}}" id="og">
       </div>
       <canvas class="og" id="canvas" ng-hide="res.hideCanvas"></canvas>
-      <div class="block-center">
-        <button class="btn btn-success" ng-click="res.save()" type="button">Save</button>
+    </div>
+
+    <div class="bc">
+      <div>
+        <img src="graphics/download_button.svg" class="navbutton" ng-click="res.save()" >
+        <p>DOWNLOAD</p>
       </div>
-      <br>
+      <div>
+        <a href="/">
+          <img src="graphics/retake_button.svg" class="navbutton">
+        </a>
+        <p>MEME AGAIN</p>
+      </div>
     </div>
 
     <div class="container">
@@ -222,18 +231,22 @@
       <div class="col-md-5">
         <div class="row">
           <div class="col-md-6">
-            <img class="avatar" src="graphics/little-white-brain.svg" alt="">
+            <a href="https://github.com/JostineHo/Mememoji">
+              <img class="avatar" src="graphics/little-white-brain.svg" alt="">
+            </a>
           </div>
           <div class="col-md-6">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Mememoji is an interactive emotion recognition system that detects emotions based on facial expressions. The core of the app is a deep convolutional neural network that predicts the compositions of the emotions expressed by users. We hope you enjoy the special features we designed and give feedback to help us further train the algorithm.
+            </p>
+            <p>For the technology used behind the application, please visit: <a href="https://github.com/JostineHo/Mememoji">github.com/JostineHo/Mememoji</a>.</p>
             </div>
           <div class="col-md-6">
-            <img class="avatar" src="graphics/g-school.svg" alt="">
+            <a href="http://www.galvanize.com/">
+              <img class="avatar" src="graphics/g-school.svg" alt="">
+            </a>
           </div>
           <div class="col-md-6">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Galvanize gives you the tools, techniques, and fundamental concepts needed to make an impact as a data scientist. In just 12 weeks, you'll apply problem-solving and creative thinking to real-world data sets, gaining experience across the data science stack: data munging, exploration, modeling, validation, visualization, and communication.</p>
             </div>
 
         </div>
@@ -256,8 +269,7 @@
                 <a href="https://github.com/JostineHo">GitHub</a>
               </div>
             </row>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p><strong>Jostine</strong> is a data scientist who loves building intelligent applications and exploring the exciting possibilities of true AI. She is interested in computer vision and automation that creates innovative solutions to real-world problems. She holds a masters degree in Petroleum & Geosystems Engineering at The University of Texas at Austin.</p>
           </div>
         </div>
         <div class="row">
