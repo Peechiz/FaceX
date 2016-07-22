@@ -48,15 +48,19 @@ function results($rootScope) {
   res.emote = {};
   res.submitted = {};
   res.nofaces = rt.results.faces.length === 0;
+  res.hideImg = false;
+  res.hideCanvas = true;
 
   var img_container = document.querySelector('#imgcontainer');
   var img = document.querySelector('#og');
+  var canvas = document.querySelector('#canvas');
+  var rageFaces = [];
 
-  img.addEventListener('load', function(){
+  img.addEventListener('load', function() {
     img_container.style.width = img.width + 'px';
     img_container.style.height = img.height + 'px';
 
-    rt.results.faces.forEach(function(face){
+    rt.results.faces.forEach(function(face, index) {
       var width = face.width;
       var height = face.height;
       var left = face.location_xy[0];
@@ -70,29 +74,66 @@ function results($rootScope) {
       // if face is over 80%, render that emotion
       // else, rageface representing top two emotions
 
-      if (dieRoll <= .3){
-        var sorted = face.prediction.sort(function(a,b){
+      if (dieRoll <= 1) {
+        var sorted = face.prediction.sort(function(a, b) {
           return b.percent - a.percent
         })
-        if (sorted[0].percent >= .8){
+        if (sorted[0].percent >= .8) {
           meme = sorted[0].emotion;
           meme = `${meme}-${meme}.png`;
-        }
-        else {
+        } else {
           var emo1 = sorted[0].emotion;
           var emo2 = sorted[1].emotion;
           meme = `${emo1}-${emo2}.png`
         }
         console.log(meme);
-        $('#imgcontainer').append(`<img class="abs" src="graphics/meme_faces/${meme}" id="${index}">`)
+        $('#imgcontainer').append(`<img class="abs rageface" src="graphics/meme_faces/${meme}" id="${index}">`)
         $(`#${index}`).width(width);
         $(`#${index}`).height(height);
         $(`#${index}`).css('top', top);
         $(`#${index}`).css('left', left);
+        rageFaces.push({
+          width: width,
+          height: height,
+          left: left,
+          top: top
+        })
+
       }
+    })
+    var rageFaceArr = document.querySelectorAll('.rageface');
+    rageFaceArr.forEach(function(face, index) {
+      rageFaces[index].face = face;
     })
   })
 
+  res.save = function() {
+    var fileName = 'myMemeMoji.png'
+    var ctx = canvas.getContext('2d');
+
+    res.hideCanvas = false;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    console.log(rageFaces);
+
+    rageFaces.forEach(function(face){
+      ctx.drawImage(face.face, face.left, face.top, face.width, face.height)
+    })
+
+    var dl = canvas.toDataURL()
+
+    var link = document.createElement('a');
+    link.download = fileName;
+    link.href = dl.replace(/^data:image\/[^;]*/, 'data:application/octet-stream')
+    link.click();
+
+
+    res.hideImg = true;
+  }
 
   res.submitFeedback = function(face) {
     console.log('submitting feedback');
@@ -147,7 +188,7 @@ function useUpload($http, $rootScope) {
   p.invalid = false;
 
   p.submit = function() {
-    if (validfile){
+    if (validfile) {
       $http({
         method: 'POST',
         url: 'http://54.164.65.15:5000/v1.0.0/predict',
@@ -165,7 +206,7 @@ function useUpload($http, $rootScope) {
       }, function fail(data) {
         console.log('error: ', data);
       })
-    }else{
+    } else {
       p.invalid = true;
     }
   }
@@ -290,16 +331,15 @@ function previewFile() {
       if (fileName == "") {
         alert("Browse to upload a valid File with png or jpg extension");
         return false;
-      }
-      else if (fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "JPG")
-      return true;
+      } else if (fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "JPG")
+        return true;
       else {
         return false;
       }
       return true;
     })()
 
-    if (validfile){
+    if (validfile) {
       preview.src = reader.result;
       loadedPhoto = reader.result;
     }
