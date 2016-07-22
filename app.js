@@ -40,7 +40,7 @@ filter('percent', function() {
   };
 });
 
-function results($rootScope) {
+function results($rootScope, $http) {
   var res = this;
   var rt = $rootScope;
 
@@ -140,6 +140,20 @@ function results($rootScope) {
     console.log(rt.results.id);
     console.log(face.index);
     console.log(res.emote[face.index]);
+
+    $http({
+      method: 'POST',
+      url: 'http://54.164.65.15:5000/v1.0.0/feedback',
+      params: {
+        image_id: rt.results.id,
+        face_index: face.index,
+        feedback: res.emote[face.index]
+      }
+    }).then(function success(data) {
+      console.log('feedback submitted successfully:', data);
+    }, function fail(data) {
+      console.log('error: ', data);
+    })
     res.feedback[face.index] = false;
     res.submitted[face.index] = true;
   }
