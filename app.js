@@ -74,7 +74,7 @@ function results($rootScope) {
       // if face is over 80%, render that emotion
       // else, rageface representing top two emotions
 
-      if (dieRoll <= 1) {
+      if (dieRoll <= .3) {
         var sorted = face.prediction.sort(function(a, b) {
           return b.percent - a.percent
         })
