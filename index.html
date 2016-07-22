@@ -71,9 +71,14 @@
               <label>
                 Choose Photo: <img id="preview" class="preview">
               </label>
-              <input class="form-control" type="file" onChange="previewFile()" id="getImage">
+              <input class="form-control" type="file" onChange="previewFile()" accept=".png, .jpg, .jpeg" id="getImage">
             </div>
-            <input class="btn btn-default" type="submit">
+            <div class="form-group">
+              <input class="btn btn-default" type="submit">
+            </div>
+            <div class="form-group" ng-show="p.invalid">
+              <p class="text-danger">Please choose a JPG or PNG</p>
+            </div>
           </form>
         </div>
       </div>
@@ -231,7 +236,9 @@
       <div class="col-md-6 col-md-offset-1">
         <div class="row">
           <div class="col-md-5">
-            <img class="avatar profile" src="https://avatars3.githubusercontent.com/u/16370085?v=3&s=460" alt="">
+            <a href="#">
+              <img class="avatar profile" src="https://avatars3.githubusercontent.com/u/16370085?v=3&s=460" alt="">
+            </a>
           </div>
           <div class="col-md-7">
             <row>
@@ -254,7 +261,9 @@
         </div>
         <div class="row">
           <div class="col-md-5">
-            <img class="avatar profile" src="https://avatars1.githubusercontent.com/u/6421349?v=3&s=460" alt="">
+            <a href="http://mrpeech.com">
+              <img class="avatar profile" src="https://avatars1.githubusercontent.com/u/6421349?v=3&s=460" alt="">
+            </a>
           </div>
           <div class="col-md-7">
             <row>
