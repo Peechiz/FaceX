@@ -120,7 +120,7 @@
       <video ng-show="w.showVideo" id="video" class="center-block vid" autoplay></video>
       <div ng-show="w.waiting">
         <h1 class="text-center blue">Loading Results...</h1>
-        <img class="center-block" src="img/gif/brain.gif">
+        <img class="center-block" src="graphics/brain1.gif">
       </div>
       <canvas class="center-block vid" ng-show="w.showCanvas"></canvas>
     </main>
@@ -148,10 +148,15 @@
     ng-if="results_received"
     ng-controller="results as res">
 
-    <div class="display result">
-      <div class="rel og" id="imgcontainer">
-        <img class="abs" ng-src="{{original}}" id="og">
+    <div class="vert result">
+      <div class="rel og" id="imgcontainer" ng-hide="res.hideImg">
+        <img class="abs" crossorigin="anonymous" ng-src="{{original}}" id="og">
       </div>
+      <canvas class="og" id="canvas" ng-hide="res.hideCanvas"></canvas>
+      <div class="block-center">
+        <button class="btn btn-success" ng-click="res.save()" type="button">Save</button>
+      </div>
+      <br>
     </div>
 
     <div class="container">
