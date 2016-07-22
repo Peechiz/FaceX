@@ -10,36 +10,36 @@ app.controller('results', results)
 var loadedPhoto;
 
 angular.
-  module('faceX').
-  filter('emoji', function() {
-    return function(input) {
+module('faceX').
+filter('emoji', function() {
+  return function(input) {
 
-      var faces = {
-        neutral: 'img/emoji/static/neutral.svg',
-        angry: 'img/emoji/static/Angry_flat.png',
-        sad: 'img/emoji/static/Cry_flat.png',
-        happy: 'img/emoji/static/Lol_flat.png',
-        surprise: 'img/emoji/static/Wow_flat.png',
-        fear: 'img/emoji/static/fear.svg'
-      }
-      return faces[input]
-    };
-  });
+    var faces = {
+      neutral: 'img/emoji/static/neutral.svg',
+      angry: 'img/emoji/static/Angry_flat.png',
+      sad: 'img/emoji/static/Cry_flat.png',
+      happy: 'img/emoji/static/Lol_flat.png',
+      surprise: 'img/emoji/static/Wow_flat.png',
+      fear: 'img/emoji/static/fear.svg'
+    }
+    return faces[input]
+  };
+});
 
 angular.
-  module('faceX').
-  filter('percent', function() {
-    return function(input) {
-      input *= 100;
-      var pct = input.toFixed(1);
-      if (pct.charAt(pct.length-1) === '0'){
-        pct = pct.slice(0,pct.length-2)
-      }
-      return pct;
-    };
-  });
+module('faceX').
+filter('percent', function() {
+  return function(input) {
+    input *= 100;
+    var pct = input.toFixed(1);
+    if (pct.charAt(pct.length - 1) === '0') {
+      pct = pct.slice(0, pct.length - 2)
+    }
+    return pct;
+  };
+});
 
-function results($rootScope){
+function results($rootScope) {
   var res = this;
   var rt = $rootScope;
 
@@ -48,48 +48,92 @@ function results($rootScope){
   res.submitted = {};
   res.nofaces = rt.results.faces.length === 0;
 
-  res.submitFeedback = function(face){
+  var img_container = document.querySelector('#imgcontainer');
+  var img = document.querySelector('#og');
+
+  console.log('hello');
+  img.addEventListener('load', function(){
+    img_container.style.width = img.width + 'px';
+    img_container.style.height = img.height + 'px';
+
+    rt.results.faces.forEach(function(face){
+      var width = face.width;
+      var height = face.height;
+      var left = face.location_xy[0];
+      var top = face.location_xy[1];
+      var index = face.index;
+      var meme;
+      var dieRoll = Math.random();
+      console.log(dieRoll);
+
+      // die roll <= .3
+      // if face is over 80%, render that emotion
+      // else, rageface representing top two emotions
+
+      if (dieRoll <= .3){
+        var sorted = face.prediction.sort(function(a,b){
+          return b.percent - a.percent
+        })
+        if (sorted[0].percent >= .8){
+          meme = sorted[0].emotion;
+          meme = `${meme}-${meme}.png`;
+        }
+        else {
+          var emo1 = sorted[0].emotion;
+          var emo2 = sorted[1].emotion;
+          meme = `${emo1}-${emo2}.png`
+        }
+
+        $('#imgcontainer').append(`<img class="abs" src="graphics/meme_faces/${meme}" id="${index}">`)
+        $(`#${index}`).width(width);
+        $(`#${index}`).height(height);
+        $(`#${index}`).css('top', top);
+        $(`#${index}`).css('left', left);
+      }
+    })
+  })
+
+
+  res.submitFeedback = function(face) {
     console.log('submitting feedback');
     console.log(rt.results.id);
     console.log(face.index);
     console.log(res.emote[face.index]);
-    res.feedback[face.index]=false;
-    res.submitted[face.index]=true;
-  }
-
-  res.confirm = function(face){
     res.feedback[face.index] = false;
     res.submitted[face.index] = true;
   }
 
-  res.getFeedback = function(face){
+  res.confirm = function(face) {
+    res.feedback[face.index] = false;
+    res.submitted[face.index] = true;
+  }
+
+  res.getFeedback = function(face) {
     res.feedback[face.index] = true;
   }
 
-  res.isBiggest = function(face_index, result){
+  res.isBiggest = function(face_index, result) {
     var arr = rt.results.faces[face_index].prediction;
 
     // console.log('current face:',face_index);
     // console.log('current emoji result:',result);
 
-    function getMax(arr){
-      return arr.reduce(function(out,item){
+    function getMax(arr) {
+      return arr.reduce(function(out, item) {
         // console.log('item:',item);
-        if (item.percent > out){
+        if (item.percent > out) {
           return item.percent
-        }
-        else {
+        } else {
           return out
         }
-      },0)
+      }, 0)
     }
 
     var biggest = getMax(arr);
 
-    if (result.percent === biggest){
+    if (result.percent === biggest) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
 
@@ -97,7 +141,7 @@ function results($rootScope){
 
 }
 
-function useUpload($http,$rootScope) {
+function useUpload($http, $rootScope) {
   var p = this;
   var rt = $rootScope;
 
@@ -116,14 +160,14 @@ function useUpload($http,$rootScope) {
       rt.results_received = true;
       rt.results = data.data
       rt.original = loadedPhoto;
-    }, function fail(data){
+    }, function fail(data) {
       console.log('error: ', data);
     })
   }
 
 }
 
-function useURL($http,$rootScope) {
+function useURL($http, $rootScope) {
   var u = this;
   var rt = $rootScope;
 
@@ -229,10 +273,10 @@ function useWebCam($http, $rootScope) {
 
 function previewFile() {
   var preview = document.getElementById('preview')
-  var file    = document.getElementById('getImage').files[0];
-  var reader  = new FileReader();
+  var file = document.getElementById('getImage').files[0];
+  var reader = new FileReader();
 
-  reader.addEventListener("load", function () {
+  reader.addEventListener("load", function() {
     preview.src = reader.result;
     loadedPhoto = reader.result;
   }, false);
