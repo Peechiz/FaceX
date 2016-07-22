@@ -6,7 +6,7 @@
   <title>MemeMoji</title>
 
   <link rel="stylesheet" href="css/bootstrap.css">
-
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/site.css">
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
@@ -144,7 +144,9 @@
     ng-controller="results as res">
 
     <div class="display result">
-      <img class="og" ng-src="{{original}}" id="og">
+      <div class="rel og" id="imgcontainer">
+        <img class="abs" ng-src="{{original}}" id="og">
+      </div>
     </div>
 
     <div class="container">
@@ -208,12 +210,22 @@
   <footer>
     <div class="container">
       <div class="col-md-5">
-        <div class="col-md-6">
-          <img class="avatar" src="graphics/little-white-brain.svg" alt="">
-        </div>
-        <div class="col-md-6">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-            irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <div class="row">
+          <div class="col-md-6">
+            <img class="avatar" src="graphics/little-white-brain.svg" alt="">
+          </div>
+          <div class="col-md-6">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+          <div class="col-md-6">
+            <img class="avatar" src="graphics/g-school.svg" alt="">
+          </div>
+          <div class="col-md-6">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+
         </div>
       </div>
       <div class="col-md-6 col-md-offset-1">
@@ -248,15 +260,16 @@
             <row>
               <div class="col-md-6">
                 <img class="link" src="graphics/linkedin.svg">
-                <a href="https://www.linkedin.com/in/chris-impicciche-4b325512">LinkedIn</a>
+                <a href="www.linkedin.com/in/chris-impicciche">LinkedIn</a>
               </div>
               <div class="col-md-6">
                 <img class="link" src="graphics/github.svg">
                 <a href="https://github.com/Peechiz">GitHub</a>
               </div>
             </row>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-              irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>
+              <strong>Chris Impicciche</strong> is a Full-Stack Web Developer 💻  living in Austin, TX 🌮. When he's not making webapps, chances are he's either gaming 🎮🎲 with his friends, making something tasty in the kitchen 🍪🍛, or out watching Roller Derby 💀🔥.
+            </p>
           </div>
         </div>
       </div>
