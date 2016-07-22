@@ -171,11 +171,14 @@ footer {
   a {
     color: $white;
     &:hover{
-      color: $white;
+      color: $yellow;
     }
   }
   .avatar {
     height: 150px;
+    &:hover {
+      border-color: $yellow;
+    }
   }
   .profile {
     border-radius: 50%;

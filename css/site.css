@@ -127,9 +127,11 @@ footer {
   footer a {
     color: #F2F2F2; }
     footer a:hover {
-      color: #F2F2F2; }
+      color: #E9B53A; }
   footer .avatar {
     height: 150px; }
+    footer .avatar:hover {
+      border-color: #E9B53A; }
   footer .profile {
     border-radius: 50%;
     border: 5px solid #F2F2F2; }
