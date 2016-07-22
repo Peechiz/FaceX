@@ -8,6 +8,7 @@ app.controller('useUpload', useUpload)
 app.controller('results', results)
 
 var loadedPhoto;
+var validfile;
 
 angular.
 module('faceX').
@@ -51,7 +52,6 @@ function results($rootScope) {
   var img_container = document.querySelector('#imgcontainer');
   var img = document.querySelector('#og');
 
-  console.log('hello');
   img.addEventListener('load', function(){
     img_container.style.width = img.width + 'px';
     img_container.style.height = img.height + 'px';
@@ -83,7 +83,7 @@ function results($rootScope) {
           var emo2 = sorted[1].emotion;
           meme = `${emo1}-${emo2}.png`
         }
-
+        console.log(meme);
         $('#imgcontainer').append(`<img class="abs" src="graphics/meme_faces/${meme}" id="${index}">`)
         $(`#${index}`).width(width);
         $(`#${index}`).height(height);
@@ -144,25 +144,30 @@ function results($rootScope) {
 function useUpload($http, $rootScope) {
   var p = this;
   var rt = $rootScope;
+  p.invalid = false;
 
   p.submit = function() {
-    $http({
-      method: 'POST',
-      url: 'http://54.164.65.15:5000/v1.0.0/predict',
-      params: {
-        image_base64: loadedPhoto,
-        annotate_image: true,
-        crop_image: true
-      }
-    }).then(function success(data) {
-      console.log(data);
-      rt.useUpload = false;
-      rt.results_received = true;
-      rt.results = data.data
-      rt.original = loadedPhoto;
-    }, function fail(data) {
-      console.log('error: ', data);
-    })
+    if (validfile){
+      $http({
+        method: 'POST',
+        url: 'http://54.164.65.15:5000/v1.0.0/predict',
+        params: {
+          image_base64: loadedPhoto,
+          annotate_image: true,
+          crop_image: true
+        }
+      }).then(function success(data) {
+        console.log(data);
+        rt.useUpload = false;
+        rt.results_received = true;
+        rt.results = data.data
+        rt.original = loadedPhoto;
+      }, function fail(data) {
+        console.log('error: ', data);
+      })
+    }else{
+      p.invalid = true;
+    }
   }
 
 }
@@ -272,13 +277,33 @@ function useWebCam($http, $rootScope) {
 }
 
 function previewFile() {
+
+
   var preview = document.getElementById('preview')
   var file = document.getElementById('getImage').files[0];
   var reader = new FileReader();
 
+
   reader.addEventListener("load", function() {
-    preview.src = reader.result;
-    loadedPhoto = reader.result;
+    validfile = (function() {
+      var fileName = document.querySelector("#getImage").value
+      if (fileName == "") {
+        alert("Browse to upload a valid File with png or jpg extension");
+        return false;
+      }
+      else if (fileName.split(".")[1].toUpperCase() == "PNG" || fileName.split(".")[1].toUpperCase() == "JPG")
+      return true;
+      else {
+        return false;
+      }
+      return true;
+    })()
+
+    if (validfile){
+      preview.src = reader.result;
+      loadedPhoto = reader.result;
+    }
+
   }, false);
 
   if (file) {
