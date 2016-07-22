@@ -126,8 +126,16 @@ body {
   margin-bottom: 25px;
   margin-right: 20px;
   margin-left: 20px;
-  max-height: 45vh;
-  @include shadow();
+  // width: 50%;
+  // @include shadow();
+}
+
+.rel {
+  position: relative;
+}
+
+.abs {
+  position: absolute;
 }
 
 .correct {
