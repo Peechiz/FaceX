@@ -122,8 +122,7 @@ main {
 .result {
   min-height: 50vh;
   background-color: #F2F2F2;
-  clear: both;
-  border-bottom: 30px solid #F35946; }
+  clear: both; }
 
 footer {
   padding-top: 100px;
