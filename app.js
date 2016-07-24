@@ -202,6 +202,7 @@ function useUpload($http, $rootScope) {
   p.invalid = false;
 
   p.submit = function() {
+    rt.waiting = true;
     if (validfile) {
       $http({
         method: 'POST',
@@ -213,6 +214,7 @@ function useUpload($http, $rootScope) {
         }
       }).then(function success(data) {
         console.log(data);
+        rt.waiting = false;
         rt.useUpload = false;
         rt.results_received = true;
         rt.results = data.data
@@ -233,6 +235,7 @@ function useURL($http, $rootScope) {
 
   u.submit = function() {
     console.log(u.url)
+    rt.waiting = true;
     $http({
       method: 'POST',
       url: 'http://54.164.65.15:5000/v1.0.0/predict',
@@ -244,6 +247,7 @@ function useURL($http, $rootScope) {
     }).then(function success(data) {
       console.log(data);
       rt.useURL = false;
+      rt.waiting=false;
       rt.results_received = true;
       rt.results = data.data
       rt.original = u.url
@@ -287,7 +291,7 @@ function useWebCam($http, $rootScope) {
     console.log('submit photo');
     window.stream.getVideoTracks()[0].stop();
     // play waiting animation by setting some varianle WAITING to true
-    w.waiting = true;
+    rt.waiting = true;
     w.showCanvas = false;
     $http({
       method: 'POST',
@@ -299,7 +303,7 @@ function useWebCam($http, $rootScope) {
       }
     }).then(function success(data) {
       console.log(data);
-      w.waiting = false;
+      rt.waiting = false;
       rt.useWebCam = false;
       rt.results_received = true;
       rt.results = data.data

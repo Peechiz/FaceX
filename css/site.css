@@ -1,6 +1,6 @@
 .logo-big {
   max-height: 60%;
-  margin: 0 50px 0 50px; }
+  padding-top: 40px; }
 
 @font-face {
   font-family: 'crazy';
@@ -113,7 +113,7 @@ body {
 
 .blue {
   color: #53b3cb;
-  padding-top: 90px; }
+  padding-top: 40px; }
 
 main {
   height: 75vh;

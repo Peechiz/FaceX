@@ -30,7 +30,7 @@
     </div>
   </nav>
 
-  <div class="div" ng-show="nav">
+  <div ng-show="nav">
     <main>
       <h1 class="logo big text-center">MemeMoji</h1>
       <img src="img/brain.svg" class="logo-big img-responsive center-block">
@@ -63,7 +63,11 @@
   <!-- ********** -->
 
   <div ng-if="useUpload" ng-controller="useUpload as p">
-    <main class="display full-height">
+    <main ng-show="waiting">
+      <h1 ng-show="waiting" class="text-center blue">Loading Results...</h1>
+      <img ng-show="waiting" class="logo-big img-responsive center-block" src="graphics/brain2.gif">
+    </main>
+    <main class="display full-height" ng-hide="waiting">
       <div class="container">
         <div class="col-md-4 col-md-offset-4">
           <form ng-submit="p.submit()">
@@ -91,7 +95,9 @@
 
   <div ng-if="useURL" ng-controller="useURL as u">
     <main>
-      <div class="display full-height">
+      <h1 ng-show="waiting" class="text-center blue">Loading Results...</h1>
+      <img ng-show="waiting" class="logo-big img-responsive center-block" src="graphics/brain2.gif">
+      <div class="display full-height" ng-hide="waiting">
             <form class="col-md-4" name="sendURL" ng-submit="u.submit()">
               <div class="form-group" ng-class="{'has-error': sendURL.url.$invalid && !sendURL.url.$pristine, 'has-success': sendURL.url.$valid}">
 
@@ -118,9 +124,9 @@
   <div ng-if="useWebCam" ng-controller="useWebCam as w">
     <main>
       <video ng-show="w.showVideo" id="video" class="center-block vid" autoplay></video>
-      <div ng-show="w.waiting">
+      <div ng-show="waiting">
         <h1 class="text-center blue">Loading Results...</h1>
-        <img class="center-block" src="graphics/brain1.gif">
+        <img class="center-block" src="graphics/brain2.gif">
       </div>
       <canvas class="center-block vid" ng-show="w.showCanvas"></canvas>
     </main>
