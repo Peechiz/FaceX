@@ -137,7 +137,7 @@ function results($rootScope, $http) {
 
   res.submitFeedback = function(face) {
     console.log('submitting feedback');
-    console.log(rt.results._id);
+    console.log(rt.results.pic_id);
     console.log(face.index);
     console.log(res.emote[face.index]);
 
@@ -145,7 +145,7 @@ function results($rootScope, $http) {
       method: 'POST',
       url: 'http://54.227.229.33:5000/v1.0.0/feedback',
       params: {
-        image_id: rt.results._id,
+        image_id: rt.results.pic_id,
         face_index: face.index,
         feedback: res.emote[face.index]
       }
