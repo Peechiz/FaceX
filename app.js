@@ -204,9 +204,10 @@ function useUpload($http, $rootScope) {
   p.submit = function() {
     rt.waiting = true;
     if (validfile) {
+      console.log('sending file');
       $http({
         method: 'POST',
-        url: 'http://54.164.65.15:5000/v1.0.0/predict',
+        url: 'http://54.227.229.33:5000/v1.0.0/predict',
         params: {
           image_base64: loadedPhoto,
           annotate_image: true,
