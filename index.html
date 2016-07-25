@@ -124,10 +124,8 @@
   <div ng-if="useWebCam" ng-controller="useWebCam as w">
     <main>
       <video ng-show="w.showVideo" id="video" class="center-block vid" autoplay></video>
-      <div ng-show="waiting">
-        <h1 class="text-center blue">Loading Results...</h1>
-        <img class="center-block" src="graphics/brain2.gif">
-      </div>
+        <h1 ng-show="waiting" class="text-center blue">Loading Results...</h1>
+        <img ng-show="waiting" class="logo-big img-responsive center-block" src="graphics/brain2.gif">
       <canvas class="center-block vid" ng-show="w.showCanvas"></canvas>
     </main>
     <div class="bc">

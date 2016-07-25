@@ -137,15 +137,15 @@ function results($rootScope, $http) {
 
   res.submitFeedback = function(face) {
     console.log('submitting feedback');
-    console.log(rt.results.id);
+    console.log(rt.results._id);
     console.log(face.index);
     console.log(res.emote[face.index]);
 
     $http({
       method: 'POST',
-      url: 'http://54.164.65.15:5000/v1.0.0/feedback',
+      url: 'http://54.227.229.33:5000/v1.0.0/feedback',
       params: {
-        image_id: rt.results.id,
+        image_id: rt.results._id,
         face_index: face.index,
         feedback: res.emote[face.index]
       }
@@ -238,7 +238,7 @@ function useURL($http, $rootScope) {
     rt.waiting = true;
     $http({
       method: 'POST',
-      url: 'http://54.164.65.15:5000/v1.0.0/predict',
+      url: 'http://54.227.229.33:5000/v1.0.0/predict',
       params: {
         image_url: u.url,
         annotate_image: true,
@@ -295,7 +295,7 @@ function useWebCam($http, $rootScope) {
     w.showCanvas = false;
     $http({
       method: 'POST',
-      url: 'http://54.164.65.15:5000/v1.0.0/predict',
+      url: 'http://54.227.229.33:5000/v1.0.0/predict',
       params: {
         image_base64: w.snapped,
         annotate_image: true,
