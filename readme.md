@@ -12,4 +12,4 @@ From the API:
 
 For my part, I was responsible for the UX of her application.  The intention was to allow users to upload, link, or snap a webcam photo and send it to her API running on AWS.  The response payload would include JSON detailing any faces that were discovered and an array of percentages representing likely emotions depicted on the user's face.
 
-This project was one of my first attempts at an angular front end, so the controller code is a little disorganized, and there were some issues with deployment as the api does not currently support HTTPS (necessary for `getUserMedia()` and parts of `<canvas`)
+This project was one of my first attempts at an angular front end, so the controller code is a little disorganized, and there were some issues with deployment as the api does not currently support HTTPS (necessary for `getUserMedia()` and parts of `<canvas>`)
