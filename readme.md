@@ -2,6 +2,8 @@
 
 A collaboration with data scientist @JostineHo, this webapp was meant to showcase her facial recognition API.
 
+![image of site splash](http://mrpeech.com/img/mememoji.png)
+
 From the API:
 
 > Mememoji is an interactive emotion recognition system that detects emotions based on facial expressions. The core of the app is a deep convolutional neural network that predicts the compositions of the emotions expressed by users. We hope you enjoy the special features we designed and give feedback to help us further train the algorithm.
